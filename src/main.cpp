@@ -62,11 +62,11 @@ int main(int argc, const char *argv[])
 
 		if(protocol == "http" || protocol == "80") {
 			// Simple socket and query
-			tcp_client::socket_t socket(svc);
-			tcp_client::query_t query(domain, "http");
-			tcp_client client(svc, socket, query,
+			socket_t socket(svc);
+			query_t query(domain, "http");
+			client client_(svc, socket, query,
 					on_read_headers, on_read_content);
-			client << request << std::endl;
+			client_ << request << std::endl;
 			svc.run();
 		} else if(protocol == "https" || protocol == "443") {
 			// SSL context from system default paths
@@ -74,14 +74,14 @@ int main(int argc, const char *argv[])
 			ctx.set_default_verify_paths();
 
 			// Stream from ASIO service and SSL context
-			ssl_tcp_client::socket_t socket(svc, ctx);
+			ssl_socket_t socket(svc, ctx);
 			socket.set_verify_mode(ssl::verify_peer);
-			ssl_tcp_client::query_t query(domain, "https");
+			query_t query(domain, "https");
 
 			// Client with SSL
-			ssl_tcp_client client(svc, socket, query,
+			ssl_client client_(svc, socket, query,
 					on_read_headers, on_read_content);
-			client << request << std::endl;
+			client_ << request << std::endl;
 			svc.run();
 		} else {
 			std::cerr << "Unknown protocol specified: "
