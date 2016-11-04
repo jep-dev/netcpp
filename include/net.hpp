@@ -40,7 +40,7 @@ namespace Net {
 	void split_url(std::string const& url, std::string & protocol,
 			std::string & domain, std::string & path);
 
-	template<typename PROTOCOL, bool USE_SSL> struct client_t;
+	template<bool USE_SSL> struct client_t;
 }
 
 #include "client.hpp"
